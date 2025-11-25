@@ -1,2 +1,2 @@
 # 2404-api-node-express
-Projeto utilizado no curso da Alura
+Projeto Node.js utilizado para implementar filtros, paginação e erros em APIs.
