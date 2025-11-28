@@ -10,4 +10,5 @@ router
   .put("/autores/:id", AutorController.atualizarAutor)
   .delete("/autores/:id", AutorController.excluirAutor)
 
+  
 export default router;   
