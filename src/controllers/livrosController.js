@@ -1,5 +1,5 @@
 import NaoEncontrada from "../errors/NaoEncontrada.js";
-import livros from "../models/Livro.js";
+import { livros } from "../models/index.js";
 
 class LivroController {
 

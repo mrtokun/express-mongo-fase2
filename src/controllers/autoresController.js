@@ -1,6 +1,6 @@
 // import { NetworkResources } from "inspector/promises";
 import NaoEncontrada from "../errors/NaoEncontrada.js";
-import autores from "../models/Autor.js";
+import { autores } from "../models/index.js";
 
 class AutorController {
 
