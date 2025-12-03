@@ -47,10 +47,12 @@ CONFIGURAÇÃO
         DB_CONNECTION_STRING=<mongodb>, onde <mongodb> se refere a connection string gerada ao se criar a base.
 
 SERVIDOR
+
     Instalar as dependências descritas em package.json
     Subir o servidor: npm run dev
 
 APIS
+
     Autor
         Inserção de novos autores
         POST - http://localhost:3000/autores
