@@ -1,5 +1,4 @@
 import NaoEncontrada from "../errors/NaoEncontrada.js";
-import RequisicaoIncorreta from "../errors/RequisicaoIncorreta.js";
 import { autores, livros } from "../models/index.js";
 
 class LivroController {
@@ -13,38 +12,14 @@ class LivroController {
         
   static listarLivros = async (req, res, next) => {
     try {
-      // const livrosResultado = await livros.find()
-      // .populate("autor")
-      // .exec();
-      
-      // Tratamento de paginação
-      // let {limite = 10, pagina = 1} = req.query;
+      // O trecho que havia aqui tratando da paginação e ordenação foi movido para o middleware paginar.js para generalizar a aplicação a outras rotas.
+      // A chamada a livros.find() abaixo não utiliza o await porque não se deve executar a query neste momento.
+      const buscaLivros = livros.find();
 
-      // Tratamento de paginação e de ordenação
-      // Por padrão implementados que o campo padrão de ordenacao será pelo _id e a ordem decrescente (-1)
-      let {limite = 10, pagina = 1, campoOrdenacao = "_id", ordem = -1} = req.query;
+      // Está sendo utilizada a variável req para trafegar os dados para o próximo middleware.
+      req.resultado = buscaLivros;
 
-      // É possível agrupar dois parametros em um ficando mais concisa a passagem de parâmetros na url
-      // let {limite = 10, pagina = 1, ordenacao = "_id:-1"} = req.query;
-      // const [campoOrdenacao, ordem] = ordenacao.split(":");
-      
-      limite = parseInt(limite);
-      pagina = parseInt(pagina);
-      ordem = parseInt(ordem);
-
-      if ((limite > 0) && (pagina > 0)) {
-        const livrosResultado = await livros.find()
-        // .sort({ titulo: 1}) // Ordena pela propriedade titulo do livro e de forma ascendente
-        .sort({[campoOrdenacao]: ordem }) // Extrai o conteudo da variável campoOrdenacao e ordena pelo valor passado na variável ordem
-        .skip((pagina -1) * limite)
-        .limit(limite)
-        .populate("autor")
-        .exec();
-        
-        res.status(200).json(livrosResultado);
-      } else {
-        next(new RequisicaoIncorreta());
-      }
+      next();
 
     } catch (erro) {
       next(erro);
@@ -183,12 +158,15 @@ class LivroController {
  static listarLivroPorFiltro = async (req, res, next) => {
     try {
       const busca = await processaBusca(req.query);
+
       if (busca !== null) {
-        const livrosResultado = await livros.
-        find(busca)
-        .populate("autor");
+        const livrosResultado = livros
+          .find(busca)
+          .populate("autor");
         if (livrosResultado !== null) {
-          res.status(200).send(livrosResultado);
+
+          req.resultado = livrosResultado;
+          next();
         } else {
           next(new NaoEncontrada("Nenhum livro encontrado."));
         } 
@@ -223,7 +201,7 @@ class LivroController {
     //   }}
 
     if (nomeAutor) {
-      // Utilizou-se o findOne mas deveria buscar pelo find com regex e para cada autoir buscar os livros.
+      // Utilizou-se o findOne mas deveria buscar pelo find com regex e para cada autor buscar os livros.
       const autor = await autores.findOne({ nome: nomeAutor});
 
       if (autor !== null) {

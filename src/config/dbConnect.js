@@ -7,8 +7,8 @@ import mongoose from "mongoose"
 // let db = mongoose.connection;
 
 async function db() {
-    // mongoose.connect(process.env.DB_CONNECTION_STRING);
-    mongoose.connect('mongodb+srv://admin:admin123@cluster0.vrimdxl.mongodb.net/livraria?appName=Cluster0');
+    mongoose.connect(process.env.DB_CONNECTION_STRING);
+    // mongoose.connect('mongodb+srv://admin:admin123@cluster0.vrimdxl.mongodb.net/livraria?appName=Cluster0');
 
     return mongoose.connection;
 }
